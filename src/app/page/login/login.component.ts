@@ -1,14 +1,9 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { AuthService } from '../../components/auth/auth.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ErrorI } from '../../interface/login/errorResponse';
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+import { AuthService } from '../../components/auth/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -33,22 +28,22 @@ export class LoginComponent {
   }
 
   onSubmit() {
-    if (this.loginForm.valid) {
-      this.loginForm.markAllAsTouched();
-      return 
-    } 
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();      
+      return;
+    }
 
     const { email, password } = this.loginForm.value;
 
-    this.authService.login({email, password}).subscribe({
+    this.authService.login({ email, password }).subscribe({ 
       next: (res) => {
-        console.log(res);
-        // this.router.navigate(['/home']);
+        console.log('res', res)
+        // this.router.navigate(['/dashboard']);
       },
-      error: (err: ErrorI) => {
-        console.log('err', err)
-        this.errorMessage = err.message;
-      }
-    })
+      error: (err) => {
+        console.log('err', err);
+        this.errorMessage = err.error?.error || 'Error al iniciar sesión';
+      },
+    });
   }
 }
