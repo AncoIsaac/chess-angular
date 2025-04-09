@@ -1,0 +1,51 @@
+<div class="flex justify-center items-center min-h-screen bg-white">
+    <section class="container">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <h1 class="text-center pb-5 font-bold">Inicio de sesión</h1>
+        <div class="flex flex-col mb-6 justify-center">
+          <label>Email <span class="text-red-500">*</span></label>
+          <input
+            type="text"
+            id="email"
+            formControlName="email"
+            class="input"
+            [class.is-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+          
+          <!-- Mensajes de validación para email -->
+          <div *ngIf="loginForm.get('email')?.hasError('required') && loginForm.get('email')?.touched"
+            class="invalid-feedback">
+            El email es requerido
+          </div>
+          <div *ngIf="loginForm.get('email')?.hasError('email') && loginForm.get('email')?.touched"
+            class="invalid-feedback">
+            Por favor ingresa un email válido
+          </div>
+        </div>
+        
+        <div class="flex flex-col mb-6 justify-center">
+          <label>Password <span class="text-red-500">*</span></label>
+          <input
+            type="password"
+            id="password"
+            formControlName="password"
+            placeholder="••••••••"
+            class="passwordInput"
+            [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+          
+          <!-- Mensajes de validación para password -->
+          <div *ngIf="loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched"
+            class="invalid-feedback">
+            La contraseña es requerida
+          </div>
+          <div *ngIf="loginForm.get('password')?.hasError('minlength') && loginForm.get('password')?.touched"
+            class="invalid-feedback">
+            La contraseña debe tener al menos 4 caracteres
+          </div>
+        </div>
+        
+        <button type="submit"  class="button">
+          Ingresar
+        </button>
+      </form>
+    </section>
+  </div>
