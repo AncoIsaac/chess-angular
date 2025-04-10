@@ -24,16 +24,16 @@ export class TestComponent implements OnInit, OnDestroy  {
   }
 
   connect() {
-    this.wsService.connect('d72e13eb-e05c-4cff-a325-e1523e35e392');
+    this.wsService.connect('e4c92348-ded3-4305-a2d0-506e11218511');
     this.connectionStatus = 'Conectando...';
   }
 
-  sendMove() {
-    this.wsService.sendMessage('playerMove', { 
-      gameId: 'd72e13eb-e05c-4cff-a325-e1523e35e392',
-      move: 'A1' 
-    });
-  }
+  // sendMove() {
+  //   this.wsService.sendMessage('playerMove', { 
+  //     gameId: 'd72e13eb-e05c-4cff-a325-e1523e35e392',
+  //     move: 'A1' 
+  //   });
+  // }
 
   ngOnDestroy() {
     this.wsService.disconnect();

@@ -10,7 +10,7 @@ export class WebsocketService {
   private socket!: any;
   private messagesSubject = new Subject<any>();
   public messages$ = this.messagesSubject.asObservable();
-  private gameId: string | null = null;
+  private gameId: string = '';
 
   constructor() {}
 
@@ -25,12 +25,14 @@ export class WebsocketService {
       reconnectionDelay: 2000,
       transports: ['websocket']
     });
+    const gameId = this.gameId;
 
     this.socket = manager.socket('/'); // Namespace raíz
 
     this.socket.on('connect', () => {
+      console.log('this.gameId', this.gameId)
       console.log('Connected to Socket.io server');
-      this.socket.emit('joinGame', { game: this.gameId });
+      this.socket.emit('joinGame', gameId);
     });
 
     this.socket.on('message', (data: any) => {
