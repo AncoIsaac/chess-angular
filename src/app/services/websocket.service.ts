@@ -1,17 +1,15 @@
 // websocket.service.ts
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
+import { Manager } from 'socket.io-client'; // Nuevo import
 
 @Injectable({
   providedIn: 'root',
 })
 export class WebsocketService {
-  private socket!: WebSocket;
+  private socket!: any;
   private messagesSubject = new Subject<any>();
   public messages$ = this.messagesSubject.asObservable();
-  private reconnectAttempts = 0;
-  private maxReconnectAttempts = 5;
-  private reconnectDelay = 2000; // 2 segundos
   private gameId: string | null = null;
 
   constructor() {}
@@ -22,48 +20,43 @@ export class WebsocketService {
   }
 
   private establishConnection(): void {
-    const wsUrl = 'ws://localhost:3000';
-    this.socket = new WebSocket(`${wsUrl}`);
+    const manager = new Manager('http://localhost:3000', {
+      reconnectionAttempts: 5,
+      reconnectionDelay: 2000,
+      transports: ['websocket']
+    });
 
-    // this.socket.onopen = () => {
-    //   console.log('WebSocket connected');
-    //   this.reconnectAttempts = 0; // Reset reconnect attempts on successful connection
-    //   this.sendMessage({ type: 'joinGame', gameId: this.gameId });
-    // };
+    this.socket = manager.socket('/'); // Namespace raíz
 
-    // this.socket.onmessage = (event) => {
-    //   const message = JSON.parse(event.data);
-    //   this.messagesSubject.next(message);
-    // };
+    this.socket.on('connect', () => {
+      console.log('Connected to Socket.io server');
+      this.socket.emit('joinGame', { game: this.gameId });
+    });
 
-    // this.socket.onclose = (event) => {
-    //   console.log('WebSocket disconnected', event);
-    //   if (
-    //     !event.wasClean &&
-    //     this.reconnectAttempts < this.maxReconnectAttempts
-    //   ) {
-    //     setTimeout(() => {
-    //       this.reconnectAttempts++;
-    //       console.log(`Reconnecting attempt ${this.reconnectAttempts}`);
-    //       this.establishConnection();
-    //     }, this.reconnectDelay);
-    //   }
-    // };
+    this.socket.on('message', (data: any) => {
+      this.messagesSubject.next(data);
+    });
 
-    // this.socket.onerror = (error) => {
-    //   console.error('WebSocket error:', error);
-    // };
+    this.socket.on('disconnect', () => {
+      console.log('Disconnected from Socket.io server');
+    });
+
+    this.socket.on('connect_error', (error: any) => {
+      console.error('Connection error:', error);
+    });
   }
 
-  public sendMessage(message: any): void {
-    if (this.socket.readyState === WebSocket.OPEN) {
-      this.socket.send(JSON.stringify(message));
+  public sendMessage(event: string, message: any): void {
+    if (this.socket?.connected) {
+      this.socket.emit(event, message);
+    } else {
+      console.warn('Socket not connected. Message not sent:', message);
     }
   }
 
   public disconnect(): void {
     if (this.socket) {
-      this.socket.close();
+      this.socket.disconnect();
     }
   }
 }

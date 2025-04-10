@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Chess } from 'chess.js';
+import { WebsocketService } from '../../../services/websocket.service';
 
 @Component({
   selector: 'app-home-chess',
@@ -14,7 +15,7 @@ export class HomeChessComponent {
   board: any[] = [];
   selectedSquare: string | null = null;
   possibleMoves: string[] = [];
-
+  
   getPieceSymbol(piece: any): string {
     const symbols: any = {
       p: '♙', n: '♞', b: '♝', r: '♜', q: '♛', k: '♚',

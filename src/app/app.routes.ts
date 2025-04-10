@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { DashboardComponent } from './page/dashboard/dashboard.component';
 import { HomePageComponent } from './page/home-page/home-page.component';
 import { HomeChessComponent } from './page/chess/home-chess/home-chess.component';
+import { TestComponent } from './page/test/test/test.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -12,6 +13,7 @@ export const routes: Routes = [
     children: [
       { path: '', component: DashboardComponent },
       { path: 'chess', component: HomeChessComponent },
+      {path: 'test', component: TestComponent},
     ],
   },
 ];

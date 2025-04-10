@@ -4,6 +4,7 @@ import {
   Menu,
   Home,
   PlayCircle,
+  FileText,
 } from 'lucide-angular';
 import { NgIf, NgFor } from '@angular/common';
 import { Router } from '@angular/router';
@@ -26,7 +27,7 @@ export class SidebarComponent {
   menuItems: MenuItemI[] = [
     { icon: Home, label: 'Inicio', route: '/home' },
     { icon: PlayCircle, label: 'chess', route: '/home/chess' },
-    // { icon: FileText, label: 'Documentos', route: '/documents' },
+    { icon: FileText, label: 'test', route: '/home/test' },
     // { icon: Settings, label: 'Configuración', route: '/settings' },
   ];
 
