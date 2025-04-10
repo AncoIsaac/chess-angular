@@ -1,0 +1,16 @@
+<div #sidebarContainer [class.collapsed]="isCollapsed" class="container">
+    <button (click)="toggleSidebar()" class="toggle-btn">
+      <lucide-icon [name]="menu"></lucide-icon>
+    </button>
+    
+    <nav class="nav-menu">
+      <ul>
+        <li *ngFor="let item of menuItems">
+          <a>
+            <lucide-icon [name]="item.icon"></lucide-icon>
+            <span *ngIf="!isCollapsed">{{item.label}}</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
