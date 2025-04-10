@@ -1,0 +1,32 @@
+<div class=" bg-white">
+  <section class="boardContainer">
+    <div class="chessBoard">
+      <div *ngFor="let row of board; let rowIndex = index" class="row">
+        <button
+          *ngFor="let square of row; let colIndex = index"
+          [class]="
+            'square ' + ((rowIndex + colIndex) % 2 === 0 ? 'light' : 'dark')
+          "
+          [class.selected]="selectedSquare === square.square"
+          [class.possible-move]="possibleMoves.includes(square.square)"
+          (click)="onSquareClick(square.square, square.piece)"
+        >
+          <span
+            *ngIf="square.piece"
+            class="piece"
+            [class.white]="square.piece.color === 'w'"
+            [class.black]="square.piece.color === 'b'"
+          >
+            {{ getPieceSymbol(square.piece) }}
+          </span>
+        </button>
+      </div>
+    </div>
+  </section>
+  <div class="controls">
+    <button (click)="newGame()">Nuevo Juego</button>
+    <div class="turn-indicator">
+      Turno: {{ game.turn() === "w" ? "Blancas" : "Negras" }}
+    </div>
+  </div>
+</div>

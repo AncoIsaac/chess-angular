@@ -1,16 +1,24 @@
-<div #sidebarContainer [class.collapsed]="isCollapsed" class="container">
-    <button (click)="toggleSidebar()" class="toggle-btn">
+<div #sidebarContainer 
+     [class.collapsed]="isCollapsed" 
+     class="container"
+     [attr.aria-expanded]="!isCollapsed">
+    <button (click)="toggleSidebar()" 
+            class="toggle-btn"
+            aria-label="Toggle sidebar">
       <lucide-icon [name]="menu"></lucide-icon>
     </button>
     
-    <nav class="nav-menu">
+    <nav class="nav-menu" aria-label="Main navigation">
       <ul>
         <li *ngFor="let item of menuItems">
-          <a>
+          <a (click)="navigateTo(item.route)"
+             [attr.aria-current]="isRouteActive(item.route) ? 'page' : null"
+             role="link"
+             tabindex="0">
             <lucide-icon [name]="item.icon"></lucide-icon>
             <span *ngIf="!isCollapsed">{{item.label}}</span>
           </a>
         </li>
       </ul>
     </nav>
-  </div>
+</div>

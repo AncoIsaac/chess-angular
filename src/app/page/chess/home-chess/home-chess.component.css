@@ -1,0 +1,130 @@
+.boardContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1rem;
+  background: #f5f5f5;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  height: 80vh;
+}
+.chessBoard {
+  display: inline-block;
+  border: 2px solid #3a3a3a;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  background: #3a3a3a;
+}
+
+.row {
+  display: flex;
+  height: calc(100% / 8);
+}
+
+.square {
+  width: 100%;
+  aspect-ratio: 1/1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  position: relative;
+  transition: all 0.2s ease;
+  font-size: 2.5rem;
+}
+
+.square.light {
+  background-color: #f0d9b5;
+}
+
+.square.dark {
+  background-color: #b58863;
+}
+  
+  .square:hover {
+    filter: brightness(1.1);
+  }
+  
+  .square.selected {
+    border: 3px solid #16cf35;
+  }
+  
+
+  
+  .square.possible-move::after {
+    content: '';
+    position: absolute;
+    width: 30%;
+    height: 30%;
+    background-color: rgba(139, 191, 72, 0.7);
+    border-radius: 50%;
+  }
+
+.piece {
+  font-weight: 500;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease;
+  z-index: 2;
+}
+
+.piece.white {
+  color: #fff;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.piece.black {
+  color: #3a3a3a;
+}
+
+.piece.dragging {
+  transform: scale(1.2);
+  z-index: 10;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.controls button {
+  padding: 0.5rem 1rem;
+  background: #3a3a3a;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.controls button:hover {
+  background: #4a4a4a;
+  transform: translateY(-1px);
+}
+
+.turn-indicator {
+  font-weight: 600;
+  color: #3a3a3a;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  background: #f0f0f0;
+}
+
+.turn-indicator.white-turn {
+  color: #b58863;
+}
+
+.turn-indicator.black-turn {
+  color: #3a3a3a;
+}

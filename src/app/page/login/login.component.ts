@@ -37,8 +37,9 @@ export class LoginComponent {
 
     this.authService.login({ email, password }).subscribe({ 
       next: (res) => {
-        console.log('res', res)
-        // this.router.navigate(['/dashboard']);
+        console.log('res', res.data.id)
+        localStorage.setItem('user', res.data.id);
+        this.router.navigate(['/home']);
       },
       error: (err) => {
         console.log('err', err);
