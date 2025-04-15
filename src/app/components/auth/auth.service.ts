@@ -9,14 +9,15 @@ import { ResponseI } from '../../page/login/interface/login/responseLogin';
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/'; // Reemplaza con tu URL real
+  // private apiUrl = 'http://localhost:3000'; // Reemplaza con tu URL real
+  private apiUrl = 'http://localhost:8080/api/'; // Reemplaza con tu URL real
   private isAuthenticated: boolean = false;
 
   constructor(private router: Router, private http: HttpClient) {}
 
   login(data: LoginI): Observable<ResponseI> {
     return this.http
-      .post<ResponseI>(`${this.apiUrl}auth/login`, {
+      .post<ResponseI>(`${this.apiUrl}auth`, {
         email: data.email,
         password: data.password,
       })
