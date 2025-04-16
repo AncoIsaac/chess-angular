@@ -11,7 +11,7 @@ export class WebsocketService {
 
   constructor() {
     this.client = new Client({
-      brokerURL: 'ws://localhost:8080/ws', // Usa 'wss://' para producción
+      brokerURL: 'ws://localhost:8080/ws', 
       onConnect: () => {
         this.client.subscribe('/topic/public', message => {
           this.messageSubject.next(JSON.parse(message.body));

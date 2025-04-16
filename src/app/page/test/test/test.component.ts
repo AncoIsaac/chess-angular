@@ -31,7 +31,7 @@ export class TestComponent implements OnInit, OnDestroy {
     if (this.message.trim()) {
       const chatMessage = {
         content: this.message,
-        sender: 'Usuario' // Puedes reemplazar con el nombre real del usuario
+        sender: localStorage.getItem('user')
       };
       this.websocketService.sendMessage(chatMessage);
       this.message = '';
