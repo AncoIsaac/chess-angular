@@ -1,64 +1,44 @@
-// websocket.service.ts
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
-import { Manager } from 'socket.io-client'; // Nuevo import
+import { Client } from '@stomp/stompjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class WebsocketService {
-  private socket!: any;
-  private messagesSubject = new Subject<any>();
-  public messages$ = this.messagesSubject.asObservable();
-  private gameId: string = '';
+  private client: Client;
+  private messageSubject = new BehaviorSubject<any>(null);
 
-  constructor() {}
-
-  public connect(gameId: string): void {
-    this.gameId = gameId;
-    this.establishConnection();
-  }
-
-  private establishConnection(): void {
-    const manager = new Manager('http://localhost:3000', {
-      reconnectionAttempts: 5,
-      reconnectionDelay: 2000,
-      transports: ['websocket']
-    });
-    const gameId = this.gameId;
-
-    this.socket = manager.socket('/'); // Namespace raíz
-
-    this.socket.on('connect', () => {
-      console.log('this.gameId', this.gameId)
-      console.log('Connected to Socket.io server');
-      this.socket.emit('joinGame', gameId);
-    });
-
-    this.socket.on('message', (data: any) => {
-      this.messagesSubject.next(data);
-    });
-
-    this.socket.on('disconnect', () => {
-      console.log('Disconnected from Socket.io server');
-    });
-
-    this.socket.on('connect_error', (error: any) => {
-      console.error('Connection error:', error);
+  constructor() {
+    this.client = new Client({
+      brokerURL: 'ws://localhost:8080/ws', 
+      onConnect: () => {
+        this.client.subscribe('/topic/public', message => {
+          this.messageSubject.next(JSON.parse(message.body));
+        });
+      },
+      reconnectDelay: 5000,
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
     });
   }
 
-  public sendMessage(event: string, message: any): void {
-    if (this.socket?.connected) {
-      this.socket.emit(event, message);
-    } else {
-      console.warn('Socket not connected. Message not sent:', message);
-    }
+  connect(): void {
+    this.client.activate();
   }
 
-  public disconnect(): void {
-    if (this.socket) {
-      this.socket.disconnect();
-    }
+  disconnect(): void {
+    this.client.deactivate();
+  }
+
+  sendMessage(message: any): void {
+    this.client.publish({
+      destination: '/app/chat.send',
+      body: JSON.stringify(message)
+    });
+  }
+
+  getMessage(): Observable<any> {
+    return this.messageSubject.asObservable();
   }
 }

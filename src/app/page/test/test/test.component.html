@@ -1,5 +1,11 @@
-<div>
-    <button (click)="connect()">Conectar</button>
-    <!-- <button (click)="sendMove()">Enviar Movimiento</button> -->
-    <div>Estado: {{ connectionStatus }}</div>
+<div class="chat-container">
+  <div class="messages">
+    <div *ngFor="let msg of messages" class="message">
+      <strong>{{msg?.sender}}</strong> {{msg?.content}}
+    </div>
   </div>
+  <div class="input-area">
+    <input [(ngModel)]="message" placeholder="Escribe un mensaje..." (keyup.enter)="sendMessage()">
+    <button (click)="sendMessage()">Enviar</button>
+  </div>
+</div>

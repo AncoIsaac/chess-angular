@@ -1,41 +1,45 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { WebsocketService } from '../../../services/websocket.service';
 import { CommonModule } from '@angular/common';
+import { FormsModule} from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { WebsocketService } from '../../../services/websocket.service';
 
 @Component({
   selector: 'app-test',
-  imports: [CommonModule],
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './test.component.html',
   styleUrl: './test.component.css'
 })
-export class TestComponent implements OnInit, OnDestroy  {
-  connectionStatus = 'Desconectado';
+export class TestComponent implements OnInit, OnDestroy {
+  messages: any[] = [];
+  message = '';
+  private messageSub!: Subscription;
 
-  constructor(private wsService: WebsocketService) {}
+  constructor(private websocketService: WebsocketService) {}
 
-  ngOnInit() {
-    this.wsService.messages$.subscribe({
-      next: (message) => {
-        console.log('Mensaje recibido:', message);
-        // Actualiza tu UI según los mensajes recibidos
-      },
-      error: (err) => console.error('Error:', err)
-    });
+  ngOnInit(): void {
+    this.websocketService.connect();
+    this.messageSub = this.websocketService.getMessage().subscribe(
+      messages => {
+        this.messages.push(messages);
+      }
+    );
   }
 
-  connect() {
-    this.wsService.connect('e4c92348-ded3-4305-a2d0-506e11218511');
-    this.connectionStatus = 'Conectando...';
+  sendMessage(): void {
+    if (this.message.trim()) {
+      const chatMessage = {
+        content: this.message,
+        sender: localStorage.getItem('user')
+      };
+      this.websocketService.sendMessage(chatMessage);
+      this.message = '';
+    }
   }
 
-  // sendMove() {
-  //   this.wsService.sendMessage('playerMove', { 
-  //     gameId: 'd72e13eb-e05c-4cff-a325-e1523e35e392',
-  //     move: 'A1' 
-  //   });
-  // }
-
-  ngOnDestroy() {
-    this.wsService.disconnect();
+  ngOnDestroy(): void {
+    this.messageSub.unsubscribe();
+    this.websocketService.disconnect();
   }
 }
